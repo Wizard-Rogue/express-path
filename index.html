@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Express Path by hyubs</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Express Path</h1>
+          <h2>Easy route mapping for Express</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/hyubs/express-path/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/hyubs/express-path/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/hyubs/express-path" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p><a href="https://travis-ci.org/hyubs/express-path"><img src="https://travis-ci.org/hyubs/express-path.png?branch=master" alt="Build Status"></a>
+<a href="https://gemnasium.com/hyubs/express-path"><img src="https://gemnasium.com/hyubs/express-path.png" alt="Dependency Status"></a></p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>via npm:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>npm install express-path
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a name="express-application" class="anchor" href="#express-application"><span class="octicon octicon-link"></span></a>Express Application</h3>
+
+<p>Here's a quick example on how to use this module with your Express application.</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="c1">// Your express settings here</span>
+
+<span class="c1">// Just before you start your http server, initialize express-path</span>
+<span class="kd">var</span> <span class="nx">routes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1">// Route mapping here</span>
+<span class="p">];</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">).</span><span class="nx">init</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="route-mapping" class="anchor" href="#route-mapping"><span class="octicon octicon-link"></span></a>Route Mapping</h3>
+
+<p>The 2nd parameter of <code>init()</code> is a 2-dimensional array in the format as shown below.</p>
+
+<div class="highlight"><pre><span class="p">[</span>
+    <span class="p">[</span><span class="nx">urlPath</span><span class="p">,</span> <span class="nx">controllerMethod</span><span class="p">,</span> <span class="nx">httpRequestMethod</span><span class="p">],</span>
+    <span class="p">[</span><span class="nx">urlPath</span><span class="p">,</span> <span class="nx">controllerMethod</span><span class="p">,</span> <span class="nx">httpRequestMethod</span><span class="p">],</span>
+    <span class="p">[</span><span class="nx">urlPath</span><span class="p">,</span> <span class="nx">controllerMethod</span><span class="p">,</span> <span class="nx">httpRequestMethod</span><span class="p">],</span> <span class="c1">// etc</span>
+<span class="p">]</span>
+</pre></div>
+
+<p>Example</p>
+
+<div class="highlight"><pre><span class="p">[</span>
+    <span class="p">[</span><span class="s1">'/'</span><span class="p">,</span> <span class="s1">'index#index'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'users/add'</span><span class="p">,</span> <span class="s1">'users#add'</span><span class="p">,</span> <span class="s1">'post'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'users'</span><span class="p">,</span> <span class="s1">'users#list'</span><span class="p">,</span> <span class="s1">'get'</span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+
+<ul>
+<li>  <code>urlPath</code> is the URL path relative to the root of your Node.JS app server.</li>
+<li>  <code>controllerMethod</code> is a # delimeted string containing the controller (the JS file) and the method (the JS function of the route).</li>
+<li>  <code>httpRequestMethod</code> is an optional parameter which tells Express which type of HTTP requests will be routed to the controller's method. Accepted parameters are listed below.
+
+<ul>
+<li>  all (any HTTP request)</li>
+<li>  get</li>
+<li>  post</li>
+<li>  put</li>
+<li>  delete</li>
+</ul>
+</li>
+</ul><h3>
+<a name="controllersmethods" class="anchor" href="#controllersmethods"><span class="octicon octicon-link"></span></a>Controllers/Methods</h3>
+
+<p>Just follow the default Express routes file for your controllers.</p>
+
+<div class="highlight"><pre><span class="c1">// For example this is in controllers/users.js</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">login</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+
+<span class="p">};</span>
+</pre></div>
+
+<p>For the sample code above, you need a route map like this:</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">routes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'/users/login'</span><span class="p">,</span> <span class="s1">'users#login'</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">).</span><span class="nx">init</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
+</pre></div>
+
+<p>You can now go to <code>/users/login</code> to see your page.</p>
+
+<h3>
+<a name="parameters" class="anchor" href="#parameters"><span class="octicon octicon-link"></span></a>Parameters</h3>
+
+<p>You can add a 3rd parameter in <code>init()</code> to set optional parameters.</p>
+
+<p>Example</p>
+
+<div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">).</span><span class="nx">init</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">,</span> <span class="p">{</span> <span class="s2">"controllersPath"</span> <span class="o">:</span> <span class="s2">"routes"</span> <span class="p">});</span>
+</pre></div>
+
+<ul>
+<li>
+<p><code>controllersPath</code> (string) - Defaults to "controllers"</p>
+
+<p>Path of the directory relative to the app's main script.</p>
+
+<p>Example:</p>
+
+<div class="highlight"><pre><span class="nb">cd</span> /home/user/mynodeapp
+node app.js
+
+<span class="c"># Express Path will try to look for your controllers in /home/user/mynodeapp/controllers</span>
+</pre></div>
+</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2013 Hyubs Ursua</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+        </section>
+
+        <footer>
+          Express Path is maintained by <a href="https://github.com/hyubs">hyubs</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
