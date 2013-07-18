@@ -43,6 +43,11 @@
 </pre></div>
 
 <h2>
+<a name="updates-and-changes" class="anchor" href="#updates-and-changes"><span class="octicon octicon-link"></span></a>Updates and Changes</h2>
+
+<ul>
+<li>2013-07-18 - Started refactoring the code for v0.1.0. Most notable difference is I removed <code>init()</code> and replaced it with <code>()</code>. Also, you can now pass a file name for the route map and Express Path will load it.</li>
+</ul><h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
 <h3>
@@ -52,20 +57,26 @@
 
 <div class="highlight"><pre><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">expressPath</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">)</span>
 
 <span class="c1">// Your express settings here</span>
 
-<span class="c1">// Just before you start your http server, initialize express-path</span>
 <span class="kd">var</span> <span class="nx">routes</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1">// Route mapping here</span>
 <span class="p">];</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">).</span><span class="nx">init</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
+<span class="nx">expressPath</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
+
+<span class="c1">// All your other stuff before the server starts</span>
 </pre></div>
 
 <h3>
 <a name="route-mapping" class="anchor" href="#route-mapping"><span class="octicon octicon-link"></span></a>Route Mapping</h3>
 
-<p>The 2nd parameter of <code>init()</code> is a 2-dimensional array in the format as shown below.</p>
+<p>The 2nd parameter of <code>()</code> can be any of the following:</p>
+
+<ul>
+<li>
+<p>a 2-dimensional array in the format as shown below</p>
 
 <div class="highlight"><pre><span class="p">[</span>
     <span class="p">[</span><span class="nx">urlPath</span><span class="p">,</span> <span class="nx">controllerMethod</span><span class="p">,</span> <span class="nx">httpRequestMethod</span><span class="p">],</span>
@@ -76,11 +87,13 @@
 
 <p>Example</p>
 
-<div class="highlight"><pre><span class="p">[</span>
+<div class="highlight"><pre><span class="c1">// In your app.js</span>
+<span class="kd">var</span> <span class="nx">routes</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">[</span><span class="s1">'/'</span><span class="p">,</span> <span class="s1">'index#index'</span><span class="p">],</span>
     <span class="p">[</span><span class="s1">'users/add'</span><span class="p">,</span> <span class="s1">'users#add'</span><span class="p">,</span> <span class="s1">'post'</span><span class="p">],</span>
     <span class="p">[</span><span class="s1">'users'</span><span class="p">,</span> <span class="s1">'users#list'</span><span class="p">,</span> <span class="s1">'get'</span><span class="p">]</span>
-<span class="p">]</span>
+<span class="p">];</span>
+<span class="nx">expressPath</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
 </pre></div>
 
 <ul>
@@ -89,17 +102,41 @@
 <li>  <code>httpRequestMethod</code> is an optional parameter which tells Express which type of HTTP requests will be routed to the controller's method. Accepted parameters are listed below.
 
 <ul>
-<li>  all (any HTTP request)</li>
-<li>  get</li>
-<li>  post</li>
-<li>  put</li>
-<li>  delete</li>
+<li>  <code>all</code> (any HTTP request)</li>
+<li>  <code>get</code>
+</li>
+<li>  <code>post</code>
+</li>
+<li>  <code>put</code>
+</li>
+<li>  <code>delete</code>
+</li>
 </ul>
+</li>
+</ul>
+</li>
+<li>
+<p>a string containing a relative path to your route map file</p>
+
+<p>If you are using a separate file, just use <code>module.exports</code> with your array.</p>
+
+<div class="highlight"><pre><span class="c1">// In your routeMap.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'/'</span><span class="p">,</span> <span class="s1">'index#index'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'users/add'</span><span class="p">,</span> <span class="s1">'users#add'</span><span class="p">,</span> <span class="s1">'post'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'users'</span><span class="p">,</span> <span class="s1">'users#list'</span><span class="p">,</span> <span class="s1">'get'</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="c1">// In your app.js</span>
+<span class="nx">expressPath</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="s1">'routeMap'</span><span class="p">);</span>
+</pre></div>
 </li>
 </ul><h3>
 <a name="controllersmethods" class="anchor" href="#controllersmethods"><span class="octicon octicon-link"></span></a>Controllers/Methods</h3>
 
 <p>Just follow the default Express routes file for your controllers.</p>
+
+<p>By default, Express Path will look for your files under <code>/controllers/</code>.</p>
 
 <div class="highlight"><pre><span class="c1">// For example this is in controllers/users.js</span>
 <span class="nx">exports</span><span class="p">.</span><span class="nx">login</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
@@ -113,7 +150,7 @@
     <span class="p">[</span><span class="s1">'/users/login'</span><span class="p">,</span> <span class="s1">'users#login'</span><span class="p">]</span>
 <span class="p">];</span>
 
-<span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">).</span><span class="nx">init</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
+<span class="nx">expressPath</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">);</span>
 </pre></div>
 
 <p>You can now go to <code>/users/login</code> to see your page.</p>
@@ -121,11 +158,11 @@
 <h3>
 <a name="parameters" class="anchor" href="#parameters"><span class="octicon octicon-link"></span></a>Parameters</h3>
 
-<p>You can add a 3rd parameter in <code>init()</code> to set optional parameters.</p>
+<p>You can add a 3rd parameter in <code>()</code> to set optional parameters (currently, there's only one option available).</p>
 
 <p>Example</p>
 
-<div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s1">'express-path'</span><span class="p">).</span><span class="nx">init</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">,</span> <span class="p">{</span> <span class="s2">"controllersPath"</span> <span class="o">:</span> <span class="s2">"routes"</span> <span class="p">});</span>
+<div class="highlight"><pre><span class="nx">expressPath</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="nx">routes</span><span class="p">,</span> <span class="p">{</span> <span class="s2">"controllersPath"</span> <span class="o">:</span> <span class="s2">"routes"</span> <span class="p">});</span>
 </pre></div>
 
 <ul>
@@ -145,28 +182,16 @@ node app.js
 </ul><h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>(The MIT License)</p>
+<p>MIT License. Read the LICENSE file.</p>
 
-<p>Copyright (c) 2013 Hyubs Ursua</p>
+<p>In summary, you can do whatever you want with the code but if it breaks, sorry :(</p>
 
-<p>Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:</p>
+<h2>
+<a name="contributions" class="anchor" href="#contributions"><span class="octicon octicon-link"></span></a>Contributions</h2>
 
-<p>The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.</p>
+<p>If you find bugs or think some parts can be improved, please post the request on GitHub.</p>
 
-<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<p>If you want to fix it yourself, kudos! Fork the repo, do your magic, and invoke a pull request. I'll be sure to thank you and add you here as a contributor.</p>
         </section>
 
         <footer>
